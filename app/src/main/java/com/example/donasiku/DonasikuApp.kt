@@ -1,13 +1,12 @@
 // DonasikuApp.kt
 package com.example.donasiku
 
+import com.example.donasiku.ui.screen.LoginScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.donasiku.ui.screen.HomeScreen
-import com.example.donasiku.ui.screen.LoginScreen
-import com.example.donasiku.RegisterScreen
 import com.example.donasiku.ui.screen.TambahBarangScreen
 
 @Composable
