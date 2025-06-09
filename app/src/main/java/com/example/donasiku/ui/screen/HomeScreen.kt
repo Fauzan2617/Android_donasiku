@@ -1,7 +1,5 @@
 package com.example.donasiku.ui.screen
 
-package com.example.donasiku.ui.screen
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

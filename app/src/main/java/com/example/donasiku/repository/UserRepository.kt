@@ -31,20 +31,20 @@ class UserRepository {
         return RetrofitClient.apiService.registerUser(request)
     }
 
-        suspend fun addDonation(
-            userId: Int,
-            namaBarang: String,
-            deskripsi: String,
-            tanggalDonasi: String
-        ): Response<DonationResponse> {
-            // Misal userId diambil dari variabel atau passed parameter; di sini kita memakai contoh userId = 1
-            val request = DonationRequest(
-                userId = 1,               // pastikan ini bertipe Int
-                institutionId = 1,     // atau ganti dengan id lembaga yang valid (Int) jika ada
-                namaBarang = namaBarang,
-                deskripsi = deskripsi,
-                tanggalDonasi = tanggalDonasi
-            )
-            return RetrofitClient.apiService.addDonation(request)
-        }
+    suspend fun addDonation(
+        userId: Int,
+        namaBarang: String,
+        deskripsi: String,
+        tanggalDonasi: String
+    ): Response<DonationResponse> {
+        // Misal userId diambil dari variabel atau passed parameter; di sini kita memakai contoh userId = 1
+        val request = DonationRequest(
+            userId = 1,               // pastikan ini bertipe Int
+            institutionId = 1,     // atau ganti dengan id lembaga yang valid (Int) jika ada
+            namaBarang = namaBarang,
+            deskripsi = deskripsi,
+            tanggalDonasi = tanggalDonasi
+        )
+        return RetrofitClient.apiService.addDonation(request)
     }
+}

@@ -1,184 +1,100 @@
 package com.example.donasiku.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.material3.TopAppBarDefaults.smallTopAppBarColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.donasiku.models.DonationResponse
 import com.example.donasiku.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
-    // Dapatkan instance ViewModel
+fun LoginScreen(navController: NavController) {
+    // Ambil instance ViewModel
     val authViewModel: AuthViewModel = viewModel()
 
-    // Jika user belum login, gunakan id default 1 untuk testing
-    val userId = authViewModel.loginResult.value?.userId ?: 1
+    // State input
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
-    // Panggil loadDonations ketika userId tersedia atau berubah
-    LaunchedEffect(key1 = userId) {
-        authViewModel.loadDonations(userId)
+    // Jika login berhasil, navigasi ke halaman home
+    val loginResponse = authViewModel.loginResult.value
+    LaunchedEffect(loginResponse) {
+        loginResponse?.let {
+            navController.navigate("home")
+        }
     }
 
-    // Ambil data donasi dari state di ViewModel
-    val donationList by authViewModel.donationList
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = "Donasiku",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                    )
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            navController.navigate("login") {
-                                popUpTo("home") { inclusive = true }
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                            contentDescription = "Logout",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                colors = smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("tambah_barang") },
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Tambah Donasi"
-                )
-            }
-        },
-        content = { paddingValues ->
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = "Selamat datang di Donasiku!",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Daftar Donasi:",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    if (donationList.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Belum ada donasi yang ditambahkan",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(donationList) { donation ->
-                                DonationItemView(donation = donation)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    )
-}
-
-@Composable
-fun DonationItemView(donation: DonationResponse) {
-    Card(
+    // Tampilan layar login, diletakkan di tengah layar dengan Card
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                            MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
-                        )
-                    )
-                )
-                .padding(16.dp)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Judul login
                 Text(
-                    text = donation.namaBarang,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = "Welcome Back!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = donation.deskripsi,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
+                // Input email
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+                // Input password
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    modifier = Modifier.fillMaxWidth(),
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+                // Tombol Login
+                Button(
+                    onClick = { authViewModel.login(email, password) },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
+                    Text("Login")
+                }
+                // Pesan error (jika ada)
+                if (authViewModel.errorMessage.value.isNotEmpty()) {
                     Text(
-                        text = "Tanggal: ${donation.tanggalDonasi}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = authViewModel.errorMessage.value,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
                     )
-                    Text(
-                        text = "Status: ${donation.status}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                }
+                // Tombol navigasi ke halaman registrasi
+                TextButton(
+                    onClick = { navController.navigate("register") }
+                ) {
+                    Text("Belum punya akun? Daftar")
                 }
             }
         }
